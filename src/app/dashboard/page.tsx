@@ -1,4 +1,4 @@
-import UserForm from "@/lib/UserForm";
+import UserForm from "@/app/component/UserForm";
 
 export default function Dashboard() {
 	return (
