@@ -3,6 +3,7 @@ import React, { Component, useEffect } from "react";
 import { useState } from "react";
 import ListItem from "./listItem";
 import StoredListItem from "./storedListItem";
+import Box from '@mui/material/Box';
 
 //callback function -> button clicked -> create (storedListItem(info,info,info))
 //on new data ->
@@ -16,21 +17,24 @@ export default function ListItemContainer() {
 
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-		console.log("helloFromContainer");
 		const form = new FormData(event.currentTarget);
 		const formData = Object.fromEntries(form.entries());
 		console.log(formData);
 		setList([...list, formData.message]);
-		console.log(list);
+
 	}
 	//make state for having data, onstate data -> div.append<storedListItem(formData)>
 	return (
 		<>
 			<ListItem mySubmit={handleSubmit} />
+			<Box sx = 
+			{{border: "1px solid black",
+			marginTop: "2em"
+			}}>
 			{list.map((listItem: any, key: any) => {
 				return <StoredListItem listItem={[listItem, key]} />;
 			})}
-			<div>helloWorld</div>
+			</Box>
 		</>
 	);
 }

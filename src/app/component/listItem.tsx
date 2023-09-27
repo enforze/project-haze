@@ -6,6 +6,10 @@ import { TextField, Stack } from "@mui/material";
 import { AddCircleOutlineOutlined } from "@mui/icons-material";
 import { useForm, SubmitHandler } from "react-hook-form";
 import handleSubmit from "./listItemContainer";
+import { create } from "domain";
+
+
+
 
 const TodoItem = {
 	width: "auto",
@@ -22,10 +26,12 @@ type listItemProps = {
 };
 
 export default function ListItem({ mySubmit }: listItemProps) {
+			//state, name
+	//const [empty, setEmpty] = useState('');
 	const { list, handleSubmit } = useForm();
 	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		mySubmit(event);
-		console.log("hello");
+		document.getElementById("multiline")!.value = "";
 	};
 	const handleChange = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
