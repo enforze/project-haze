@@ -1,41 +1,12 @@
 "use client";
-import React, { Component } from "react";
-import { useState } from "react";
+import React, { useRef } from "react";
 import Fab from "@mui/material/Button";
 import { TextField, Stack } from "@mui/material";
 import { AddCircleOutlineOutlined } from "@mui/icons-material";
-import { useForm, SubmitHandler } from "react-hook-form";
-import handleSubmit from "./listItemContainer";
-import { create } from "domain";
+import { handleSubmit } from "@/lib/serverActions";
 
-
-
-
-const TodoItem = {
-	width: "auto",
-	border: "1px solid black",
-	padding: "1em",
-	height: "5em",
-};
-type FormValues = {
-	data: string;
-};
-
-type listItemProps = {
-	mySubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-};
-
-export default function ListItem({ mySubmit }: listItemProps) {
-			//state, name
-	//const [empty, setEmpty] = useState('');
-	const { list, handleSubmit } = useForm();
-	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-		mySubmit(event);
-		document.getElementById("multiline")!.value = "";
-	};
-	const handleChange = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-	};
+export default function ListItem() {
+	const ref = useRef<HTMLFormElement>(null);
 	return (
 		<Stack
 			sx={{
@@ -48,14 +19,21 @@ export default function ListItem({ mySubmit }: listItemProps) {
 			direction="column"
 		>
 			<h1>I need to:</h1>
-			<form method="post" onSubmit={onSubmit} onChange={handleChange}>
+			<form
+				ref={ref}
+				action={async (FormData: FormData) => {
+					ref?.current?.reset();
+					await handleSubmit(FormData);
+				}}
+			>
 				<TextField
 					id="multiline"
 					multiline
 					type="text"
-					name="message"
+					name="content"
 					placeholder="input item"
 					rows={2}
+					required
 				/>
 				<Fab
 					color="primary"
