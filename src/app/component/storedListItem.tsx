@@ -3,27 +3,38 @@ import {
 	Box,
 	Checkbox,
 	Stack,
-	Popper,
 	IconButton,
 	Button,
+	Paper,
+	Menu,
+	MenuItem,
+	MenuList,
+	ListItemIcon,
+	Typography,
+	ListItemText,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { MouseEvent, useState } from "react";
 
 export default function StoredListItem(listItem: any) {
-	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const id = open ? "menu-popper" : undefined;
 
-	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-		setAnchorEl(anchorEl ? null : event.currentTarget);
+	const handleClick = (event: MouseEvent<HTMLElement>) => {
+		setAnchorEl(event.currentTarget);
 	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
 	const handleDelete = () => {
 		console.log("hello delete");
 	};
 	const handleEdit = () => {
 		console.log("hello edit");
 	};
-	const open = Boolean(anchorEl);
-	const id = open ? "simple-popper" : undefined;
 	return (
 		<Box
 			sx={{ border: "1px solid black", width: "50%", minHeight: "85px" }}
@@ -34,7 +45,7 @@ export default function StoredListItem(listItem: any) {
 					float: "right",
 				}}
 			>
-				<div>
+				<>
 					<Button
 						variant="contained"
 						aria-describedby={id}
@@ -43,23 +54,26 @@ export default function StoredListItem(listItem: any) {
 					>
 						...
 					</Button>
-					<Popper id={id} open={open} anchorEl={anchorEl}>
-						<Box
-							sx={{
-								border: 1,
-								p: 1,
-								bgcolor: "background.paper",
-							}}
-						>
-							<IconButton onClick={handleDelete}>
-								<DeleteIcon />
-							</IconButton>
-							<IconButton onClick={handleEdit}>
+					<Menu
+						id={id}
+						open={open}
+						onClose={handleClose}
+						anchorEl={anchorEl}
+					>
+						<MenuItem onClick={handleEdit}>
+							<ListItemIcon>
 								<EditIcon />
-							</IconButton>
-						</Box>
-					</Popper>
-				</div>
+							</ListItemIcon>
+							<ListItemText>Edit</ListItemText>
+						</MenuItem>
+						<MenuItem onClick={handleDelete}>
+							<ListItemIcon>
+								<DeleteIcon />
+							</ListItemIcon>
+							<ListItemText>Delete</ListItemText>
+						</MenuItem>
+					</Menu>
+				</>
 				<Box>
 					<Checkbox />
 				</Box>
