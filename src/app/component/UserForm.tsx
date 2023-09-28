@@ -1,4 +1,5 @@
 "use client";
+import { Button, Grid, TextField } from "@mui/material";
 
 export default function UserForm() {
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -9,8 +10,8 @@ export default function UserForm() {
 
 		console.log(formData);
 
-		const res = await fetch("api/users", {
-			body: JSON.stringify(Object.fromEntries(form.entries())),
+		const res = await fetch("api/users/create", {
+			body: JSON.stringify(formData),
 			headers: {
 				"Content-Type": "application/json",
 			},
@@ -27,19 +28,33 @@ export default function UserForm() {
 
 	return (
 		<form onSubmit={handleSubmit}>
-			<label>
-				Name:
-				<input type="text" name="name" />
-			</label>
-			<label>
-				Email:
-				<input type="email" name="email" />
-			</label>
-			<label>
-				Password:
-				<input type="password" name="password" />
-			</label>
-			<button type="submit">Submit</button>
+			<Grid container direction={"row"} spacing={2}>
+				<Grid
+					spacing={2}
+					direction={{ md: "row", xs: "column" }}
+					container
+					item
+				>
+					<Grid item>
+						<TextField label="Name" type="text" name="name" />
+					</Grid>
+					<Grid item>
+						<TextField label="Email" type="email" name="email" />
+					</Grid>
+					<Grid item>
+						<TextField
+							label="Password"
+							type="password"
+							name="password"
+						/>
+					</Grid>
+				</Grid>
+				<Grid item xs={12}>
+					<Button variant="contained" type="submit">
+						Submit
+					</Button>
+				</Grid>
+			</Grid>
 		</form>
 	);
 }
