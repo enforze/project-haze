@@ -5,7 +5,7 @@ import { TextField, Stack } from "@mui/material";
 import { AddCircleOutlineOutlined } from "@mui/icons-material";
 import { handleSubmit } from "@/lib/serverActions";
 
-export default function ListItem() {
+export default function ListForm() {
 	const ref = useRef<HTMLFormElement>(null);
 	return (
 		<Stack

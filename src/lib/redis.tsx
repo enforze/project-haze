@@ -112,7 +112,6 @@ export async function createListItem(
 
 	const listItemData = {
 		userId: userId,
-		title: "List Item",
 		content: content,
 		isDone: false,
 		priority: 1,
@@ -139,6 +138,7 @@ export async function deleteListItem(
 ): Promise<void> {
 	await redisConnect();
 
+	console.log(listItemId, userId);
 	const repository = new Repository(listItemSchema, redisClient);
 
 	const listItem = await repository.fetch(listItemId);
@@ -156,7 +156,6 @@ export async function deleteListItem(
 
 type updateListItemPayload = {
 	listItemId: string;
-	title: string;
 	content: string;
 	isDone: boolean;
 	priority: number;
@@ -180,7 +179,6 @@ export async function updateListItem(
 		throw new Error("User not authorized");
 	}
 
-	item.title = listItemData.title;
 	item.content = listItemData.content;
 	item.isDone = listItemData.isDone;
 	item.priority = listItemData.priority;

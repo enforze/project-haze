@@ -1,11 +1,15 @@
 import { Box } from "@mui/material";
+import { EntityId } from "redis-om";
 import StoredListItem from "./storedListItem";
+import { listItemsProps } from "@/lib/sharedType";
 
-export default function ListItems(data: any) {
+export default function ListItems({ data, ...other }: listItemsProps) {
 	return (
 		<Box sx={{ border: "1px solid black", marginTop: "2em" }}>
-			{data?.data?.map((listItem: any, key: any) => {
-				return <StoredListItem listItem={[listItem.content, key]} />;
+			{data?.map((item: any, key: any) => {
+				return (
+					<StoredListItem key={key} item={item} id={item[EntityId]} />
+				);
 			})}
 		</Box>
 	);

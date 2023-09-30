@@ -3,24 +3,28 @@ import {
 	Box,
 	Checkbox,
 	Stack,
-	IconButton,
 	Button,
-	Paper,
 	Menu,
 	MenuItem,
-	MenuList,
 	ListItemIcon,
-	Typography,
 	ListItemText,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { MouseEvent, useState } from "react";
+import { deleteItem } from "@/lib/serverActions";
+import { storedListItemProps } from "@/lib/sharedType";
 
-export default function StoredListItem(listItem: any) {
+export default function StoredListItem({
+	item,
+	id,
+	...other
+}: storedListItemProps) {
+	console.log(item, "listItem");
+
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
-	const id = open ? "menu-popper" : undefined;
+	const menuId = open ? "menu-popper" : undefined;
 
 	const handleClick = (event: MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -30,7 +34,7 @@ export default function StoredListItem(listItem: any) {
 	};
 
 	const handleDelete = () => {
-		console.log("hello delete");
+		deleteItem(id, item.userId);
 	};
 	const handleEdit = () => {
 		console.log("hello edit");
@@ -39,7 +43,7 @@ export default function StoredListItem(listItem: any) {
 		<Box
 			sx={{ border: "1px solid black", width: "50%", minHeight: "85px" }}
 		>
-			{listItem.listItem[0]}
+			{item.content}
 			<Stack
 				sx={{
 					float: "right",
@@ -48,14 +52,14 @@ export default function StoredListItem(listItem: any) {
 				<>
 					<Button
 						variant="contained"
-						aria-describedby={id}
+						aria-describedby={menuId}
 						type="button"
 						onClick={handleClick}
 					>
 						...
 					</Button>
 					<Menu
-						id={id}
+						id={menuId}
 						open={open}
 						onClose={handleClose}
 						anchorEl={anchorEl}

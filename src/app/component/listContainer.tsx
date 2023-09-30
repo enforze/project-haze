@@ -1,13 +1,13 @@
 import { getItems } from "@/lib/serverActions";
-import ListItem from "./listItem";
+import ListForm from "./listForm";
 import ListItems from "./listItems";
 
-export default async function ListItemContainer() {
-	const data = await getItems();
+export default async function ListContainer() {
+	var data = await getItems();
 
 	return (
 		<>
-			<ListItem />
+			<ListForm />
 			<ListItems data={data} />
 		</>
 	);
