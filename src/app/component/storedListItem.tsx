@@ -1,28 +1,30 @@
 "use client";
 import {
-	Box,
-	Checkbox,
 	Stack,
-	Button,
 	Menu,
 	MenuItem,
 	ListItemIcon,
 	ListItemText,
+	Fab,
+	Card,
+	Grid,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { MouseEvent, useState } from "react";
-import { deleteItem } from "@/lib/serverActions";
 import { storedListItemProps } from "@/lib/sharedType";
+import { EditForm } from "./editFrom";
+import { deleteItem } from "@/lib/serverActions";
 
 export default function StoredListItem({
 	item,
 	id,
 	...other
 }: storedListItemProps) {
-	console.log(item, "listItem");
-
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [edit, setEdit] = useState<boolean>(false);
 	const open = Boolean(anchorEl);
 	const menuId = open ? "menu-popper" : undefined;
 
@@ -34,30 +36,47 @@ export default function StoredListItem({
 	};
 
 	const handleDelete = () => {
+		// console.log(item.userId, id);
 		deleteItem(id, item.userId);
 	};
 	const handleEdit = () => {
-		console.log("hello edit");
+		setEdit(!edit);
 	};
 	return (
-		<Box
-			sx={{ border: "1px solid black", width: "50%", minHeight: "85px" }}
+		<Card
+			sx={{
+				borderRadius: "8px",
+				margin: "8px",
+				padding: "8px",
+			}}
 		>
-			{item.content}
 			<Stack
+				direction="row"
+				spacing={1}
 				sx={{
-					float: "right",
+					justifyContent: "space-between",
 				}}
 			>
-				<>
-					<Button
-						variant="contained"
+				<EditForm
+					{...item}
+					itemId={id}
+					isEdit={edit}
+					handleClose={handleEdit}
+				/>
+
+				<Stack>
+					<Fab
+						size="small"
+						disableRipple
 						aria-describedby={menuId}
-						type="button"
 						onClick={handleClick}
 					>
-						...
-					</Button>
+						{!anchorEl ? (
+							<MoreVertIcon fontSize="small" />
+						) : (
+							<MoreHorizIcon fontSize="small" />
+						)}
+					</Fab>
 					<Menu
 						id={menuId}
 						open={open}
@@ -77,11 +96,8 @@ export default function StoredListItem({
 							<ListItemText>Delete</ListItemText>
 						</MenuItem>
 					</Menu>
-				</>
-				<Box>
-					<Checkbox />
-				</Box>
+				</Stack>
 			</Stack>
-		</Box>
+		</Card>
 	);
 }

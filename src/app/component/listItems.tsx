@@ -5,10 +5,14 @@ import { listItemsProps } from "@/lib/sharedType";
 
 export default function ListItems({ data, ...other }: listItemsProps) {
 	return (
-		<Box sx={{ border: "1px solid black", marginTop: "2em" }}>
+		<Box>
 			{data?.map((item: any, key: any) => {
 				return (
-					<StoredListItem key={key} item={item} id={item[EntityId]} />
+					<StoredListItem
+						key={key}
+						item={JSON.parse(JSON.stringify(item))}
+						id={item[EntityId]}
+					/>
 				);
 			})}
 		</Box>
