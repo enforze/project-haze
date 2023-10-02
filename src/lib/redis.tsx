@@ -1,5 +1,6 @@
 import { Schema, Repository, Entity } from "redis-om";
 import { createClient } from "redis";
+import { updateListItemPayload } from "./sharedType";
 
 const redisClient = createClient({ url: process.env.REDIS_URL });
 
@@ -112,7 +113,6 @@ export async function createListItem(
 
 	const listItemData = {
 		userId: userId,
-		title: "List Item",
 		content: content,
 		isDone: false,
 		priority: 1,
@@ -154,14 +154,6 @@ export async function deleteListItem(
 	await repository.remove(listItemId);
 }
 
-type updateListItemPayload = {
-	listItemId: string;
-	title: string;
-	content: string;
-	isDone: boolean;
-	priority: number;
-};
-
 export async function updateListItem(
 	listItemData: updateListItemPayload,
 	userId: string
@@ -180,10 +172,35 @@ export async function updateListItem(
 		throw new Error("User not authorized");
 	}
 
-	item.title = listItemData.title;
 	item.content = listItemData.content;
 	item.isDone = listItemData.isDone;
 	item.priority = listItemData.priority;
+
+	const itemId = await repository.save(item);
+
+	return itemId;
+}
+
+export async function updateIsDone(
+	listItemId: string,
+	isDone: boolean,
+	userId: string
+): Promise<Entity> {
+	await redisConnect();
+
+	const repository = new Repository(listItemSchema, redisClient);
+
+	const item = await repository.fetch(listItemId);
+
+	if (!item) {
+		throw new Error("List item not found");
+	}
+
+	if (item.userId !== userId) {
+		throw new Error("User not authorized");
+	}
+
+	item.isDone = isDone;
 
 	const itemId = await repository.save(item);
 

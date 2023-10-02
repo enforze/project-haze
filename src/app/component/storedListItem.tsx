@@ -1,69 +1,103 @@
 "use client";
 import {
-	Box,
-	Checkbox,
 	Stack,
-	Popper,
-	IconButton,
-	Button,
+	Menu,
+	MenuItem,
+	ListItemIcon,
+	ListItemText,
+	Fab,
+	Card,
+	Grid,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { MouseEvent, useState } from "react";
+import { storedListItemProps } from "@/lib/sharedType";
+import { EditForm } from "./editFrom";
+import { deleteItem } from "@/lib/serverActions";
 
-export default function StoredListItem(listItem: any) {
-	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+export default function StoredListItem({
+	item,
+	id,
+	...other
+}: storedListItemProps) {
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [edit, setEdit] = useState<boolean>(false);
+	const open = Boolean(anchorEl);
+	const menuId = open ? "menu-popper" : undefined;
 
-	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-		setAnchorEl(anchorEl ? null : event.currentTarget);
+	const handleClick = (event: MouseEvent<HTMLElement>) => {
+		setAnchorEl(event.currentTarget);
 	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
 	const handleDelete = () => {
-		console.log("hello delete");
+		// console.log(item.userId, id);
+		deleteItem(id, item.userId);
 	};
 	const handleEdit = () => {
-		console.log("hello edit");
+		setEdit(!edit);
 	};
-	const open = Boolean(anchorEl);
-	const id = open ? "simple-popper" : undefined;
 	return (
-		<Box
-			sx={{ border: "1px solid black", width: "50%", minHeight: "85px" }}
+		<Card
+			sx={{
+				borderRadius: "8px",
+				margin: "8px",
+				padding: "8px",
+			}}
 		>
-			{listItem.listItem[0]}
 			<Stack
+				direction="row"
+				spacing={1}
 				sx={{
-					float: "right",
+					justifyContent: "space-between",
 				}}
 			>
-				<div>
-					<Button
-						variant="contained"
-						aria-describedby={id}
-						type="button"
+				<EditForm
+					{...item}
+					itemId={id}
+					isEdit={edit}
+					handleClose={handleEdit}
+				/>
+
+				<Stack>
+					<Fab
+						size="small"
+						disableRipple
+						aria-describedby={menuId}
 						onClick={handleClick}
 					>
-						...
-					</Button>
-					<Popper id={id} open={open} anchorEl={anchorEl}>
-						<Box
-							sx={{
-								border: 1,
-								p: 1,
-								bgcolor: "background.paper",
-							}}
-						>
-							<IconButton onClick={handleDelete}>
-								<DeleteIcon />
-							</IconButton>
-							<IconButton onClick={handleEdit}>
+						{!anchorEl ? (
+							<MoreVertIcon fontSize="small" />
+						) : (
+							<MoreHorizIcon fontSize="small" />
+						)}
+					</Fab>
+					<Menu
+						id={menuId}
+						open={open}
+						onClose={handleClose}
+						anchorEl={anchorEl}
+					>
+						<MenuItem onClick={handleEdit}>
+							<ListItemIcon>
 								<EditIcon />
-							</IconButton>
-						</Box>
-					</Popper>
-				</div>
-				<Box>
-					<Checkbox />
-				</Box>
+							</ListItemIcon>
+							<ListItemText>Edit</ListItemText>
+						</MenuItem>
+						<MenuItem onClick={handleDelete}>
+							<ListItemIcon>
+								<DeleteIcon />
+							</ListItemIcon>
+							<ListItemText>Delete</ListItemText>
+						</MenuItem>
+					</Menu>
+				</Stack>
 			</Stack>
-		</Box>
+		</Card>
 	);
 }

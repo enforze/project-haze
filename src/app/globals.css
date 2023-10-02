@@ -108,3 +108,17 @@ a {
 		color-scheme: light;
 	}
 } */
+
+body {
+	background-color: rgb(110, 130, 206);
+	font-family: "Roboto", sans-serif;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #212529;
+	text-align: left;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	overflow-x: hidden;
+}
